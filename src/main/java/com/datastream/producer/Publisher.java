@@ -32,7 +32,7 @@ public class Publisher implements Runnable {
 
     switch(MessageType.valueOf(this.topicName.toUpperCase())) {
       case GENRES:
-        message = new GenreMessage(messageString[0], messageString[1], messageString[2]);
+        message = new GenreMessage(messageString[0], messageString[1], messageString[2], messageString[3]);
         break;
       case SONG_ATTRIBUTES:
         message = new SongAttributesMessage(messageString[0], messageString[1], messageString[2], messageString[3]);

@@ -4,11 +4,13 @@ public class GenreMessage {
   String genreID;
   String parentID;
   String position;
+  String genreName;
 
-  public GenreMessage(String genreID, String parentID, String position) {
+  public GenreMessage(String genreID, String parentID, String position, String genreName) {
     this.genreID = genreID;
     this.parentID = parentID;
     this.position = position;
+    this.genreName = genreName;
   }
 
   public String getGenreID() {
@@ -21,6 +23,10 @@ public class GenreMessage {
 
   public String getPosition() {
     return this.position;
+  }
+
+  public String getGenreName() {
+    return this.genreName;
   }
 
   public String toString() {
