@@ -3,7 +3,7 @@ package com.datastream.producer;
 public enum MessageType {
   SONGS("songs"),
   GENRES("genres"),
-  SONG_ATTRIBUTES("song_attributes");
+  SONGATTRIBUTES("songAttributes");
 
   public final String label;
  

@@ -12,14 +12,24 @@ import com.datastream.producer.messages.SongAttributesMessage;
 import java.io.File;
 import java.util.Scanner;
 
+class Message {
+  String key;
+  JsonNode value;
+
+  Message(String key, JsonNode value) {
+    this.key = key;
+    this.value = value;
+  }
+}
+
 public class Publisher implements Runnable {
 
-  private final KafkaProducer<Integer, JsonNode> producer;
+  private final KafkaProducer<String, JsonNode> producer;
   private final String topicName;
   private final String fileLocation;
   private ObjectMapper objectMapper;
 
-  Publisher(KafkaProducer<Integer, JsonNode> producer, String topicName, String fileLocation) {
+  Publisher(KafkaProducer<String, JsonNode> producer, String topicName, String fileLocation) {
     this.producer = producer;
     this.topicName = topicName;
     this.fileLocation = fileLocation;
@@ -27,34 +37,37 @@ public class Publisher implements Runnable {
     objectMapper = new ObjectMapper();
   }
 
-  public JsonNode constructMessage(String[] messageString) {
-    Object message;
+  public Message constructMessage(String[] messageString) {
+    String key;
+    Object value;
 
     switch(MessageType.valueOf(this.topicName.toUpperCase())) {
       case GENRES:
-        message = new GenreMessage(messageString[0], messageString[1], messageString[2], messageString[3]);
+        key = messageString[0];
+        value = new GenreMessage(messageString[0], messageString[1], messageString[2], messageString[3]);
         break;
-      case SONG_ATTRIBUTES:
-        message = new SongAttributesMessage(messageString[0], messageString[1], messageString[2], messageString[3]);
+      case SONGATTRIBUTES:
+        key = messageString[0];
+        value = new SongAttributesMessage(messageString[0], messageString[1], messageString[2], messageString[3]);
         break;
       default:
       case SONGS:
-        message = new SongMessage(messageString[0], messageString[1], messageString[2]);
+        key = messageString[1]; // songId is the second field
+        value = new SongMessage(messageString[0], messageString[1], messageString[2]);
     }
 
-    return objectMapper.valueToTree(message);
+    return new Message(key, objectMapper.valueToTree(value));
   }
 
   @Override
   public void run() {
     File file = new File(fileLocation);
-    int key = 0;
 
     try (Scanner scanner = new Scanner(file)) {
       while (scanner.hasNextLine()) {
         String[] messageString = scanner.nextLine().split("\t");
-        JsonNode message = constructMessage(messageString);
-        producer.send(new ProducerRecord<Integer, JsonNode>(topicName, key++, message));
+        Message message = constructMessage(messageString);
+        producer.send(new ProducerRecord<String, JsonNode>(topicName, message.key, message.value));
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
