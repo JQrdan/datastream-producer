@@ -27,7 +27,7 @@ public class Publisher implements Runnable {
     objectMapper = new ObjectMapper();
   }
 
-  public Object constructMessage(String[] messageString) {
+  public JsonNode constructMessage(String[] messageString) {
     Object message;
 
     switch(MessageType.valueOf(this.topicName.toUpperCase())) {
@@ -42,7 +42,7 @@ public class Publisher implements Runnable {
         message = new SongMessage(messageString[0], messageString[1], messageString[2]);
     }
 
-    return message;
+    return objectMapper.valueToTree(message);
   }
 
   @Override
@@ -53,8 +53,8 @@ public class Publisher implements Runnable {
     try (Scanner scanner = new Scanner(file)) {
       while (scanner.hasNextLine()) {
         String[] messageString = scanner.nextLine().split("\t");
-        JsonNode jsonNode = objectMapper.valueToTree(constructMessage(messageString));
-        producer.send(new ProducerRecord<Integer, JsonNode>(topicName, key++, jsonNode));
+        JsonNode message = constructMessage(messageString);
+        producer.send(new ProducerRecord<Integer, JsonNode>(topicName, key++, message));
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
