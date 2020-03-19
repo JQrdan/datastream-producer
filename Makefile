@@ -11,4 +11,4 @@ genres:
 	mvn exec:java -Dexec.mainClass=com.datastream.producer.Producer -Dexec.args="genres ../ydata/genre-hierarchy.txt"
 
 song-attributes:
-	mvn exec:java -Dexec.mainClass=com.datastream.producer.Producer -Dexec.args="songAttributes ../ydata/song-attributes.txt"
+	mvn exec:java -Dexec.mainClass=com.datastream.producer.Producer -Dexec.args="songattributes ../ydata/song-attributes.txt"
