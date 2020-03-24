@@ -13,7 +13,7 @@ import java.util.Properties;
 public class Producer {
   private static KafkaProducer<String, JsonNode> createProducer() {
     Properties props = new Properties();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka2:9093");
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9092,kafka2:9093,kafka3:9094");
     props.put(ProducerConfig.CLIENT_ID_CONFIG, "SongProducer");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JSONSerializer.class.getName());

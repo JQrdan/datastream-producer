@@ -12,3 +12,8 @@ genres:
 
 song-attributes:
 	mvn exec:java -Dexec.mainClass=com.datastream.producer.Producer -Dexec.args="songattributes ../ydata/song-attributes.txt"
+
+all:
+	$(MAKE) genres
+	$(MAKE) song-attributes
+	$(MAKE) songs
